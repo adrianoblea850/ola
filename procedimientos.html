@@ -1,0 +1,869 @@
+<html lang="es">
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script>
+        let uploadedFiles = [];
+
+        function handleFileUpload(event) {
+            const fileList = event.target.files;
+
+            for (let i = 0; i < fileList.length; i++) {
+                uploadedFiles.push(fileList[i]);
+            }
+
+            renderFileList();
+        }
+
+        function renderFileList() {
+            const fileNamesContainer = document.getElementById('file-names');
+            fileNamesContainer.innerHTML = '';
+
+            uploadedFiles.forEach((file, index) => {
+                const fileName = document.createElement('div');
+                fileName.className = 'flex justify-between items-center bg-gray-100 p-2 rounded mb-2';
+                fileName.innerHTML = `
+                    <span>${file.name}</span>
+                    <button onclick="removeFile(${index})" class="text-red-600 hover:text-red-800 ml-2"><i class="fas fa-times"></i></button>
+                `;
+                fileNamesContainer.appendChild(fileName);
+            });
+        }
+
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            renderFileList();
+        }
+
+        function openPopup() {
+            document.getElementById('popup-modal').classList.remove('hidden');
+        }
+
+        function closePopup() {
+            document.getElementById('popup-modal').classList.add('hidden');
+        }
+
+        function openTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                if (tab.id === tabName) {
+                    tab.classList.remove('hidden');
+                } else {
+                    tab.classList.add('hidden');
+                }
+            });
+
+            const tabLinks = document.querySelectorAll('.tab-link');
+            tabLinks.forEach(link => {
+                if (link.dataset.tab === tabName) {
+                    link.classList.add('bg-blue-500', 'text-white');
+                    link.classList.remove('text-blue-500');
+                } else {
+                    link.classList.remove('bg-blue-500', 'text-white');
+                    link.classList.add('text-blue-500');
+                }
+            });
+        }
+
+        function toggleInput(inputId, selectElement) {
+            const inputField = document.getElementById(inputId);
+            inputField.style.display = selectElement.value === 'otro' ? 'block' : 'none';
+        }
+
+        function toggleForaneoInput(selectElement) {
+            const foraneoInput = document.getElementById('foraneo-input');
+            foraneoInput.style.display = selectElement.value === 'foraneo' ? 'block' : 'none';
+        }
+    </script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-4xl text-red-600 font-bold">PRUEBAS</h1>
+            <span class="text-lg">Usuario: Julieta</span>
+        </div>
+        <div class="flex justify-end mb-4">
+            <div class="flex space-x-4">
+                <a href="index.html" class="text-gray-600 hover:text-red-600">REPORTES</a>
+                <a href="#" class="text-gray-600 hover:text-red-600">REPORTEADOR</a>
+                <a href="#" class="text-gray-600 hover:text-red-600">DESCARGAR ENCUESTA</a>
+                <a href="#" class="text-gray-600 hover:text-red-600">ESTADÍSTICAS</a>
+                <a href="#" class="text-gray-600 hover:text-red-600">AUDITORIAS</a>
+                <a href="procedimientos.html" class="text-gray-600 hover:text-red-600">PROCEDIMIENTOS</a>
+                <div class="relative">
+                    <a href="#" class="text-gray-600 hover:text-red-600">CONFIGURACIÓN</a>
+                    <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg hidden">
+                        <a href="#" class="block px-4 py-2 text-gray-600 hover:bg-gray-100">Submenu  1</a>
+                        <a href="#" class="block px-4 py-2 text-gray-600 hover:bg-gray-100">Sub menu 2</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-between items-center mb-4">
+            <div class="flex space-x-2">
+                <button onclick="openPopup()" class="bg-blue-500 text-white px-4 py-2 rounded">+ Nuevo proceso</button>
+            </div>
+        </div>
+    </div>
+    <table style="margin: 0 auto; width: 80%;" class="min-w-full bg-white border border-gray-300" >
+        <thead>
+            <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                <th class="py-3 px-4 border border-gray-300">#</th>
+                <th class="py-3 px-4 border border-gray-300">SEGUIM</th>
+                <th class="py-3 px-4 border border-gray-300">SEMAFORO</th>
+                <th class="py-3 px-4 border border-gray-300">VISTA</th>
+                <th class="py-3 px-4 border border-gray-300">BORRAR</th>
+                <th class="py-3 px-4 border border-gray-300">Enviar/</th>
+                <th class="py-3 px-4 border border-gray-300">INV.B</th>
+                <th class="py-3 px-4 border border-gray-300">INVESTIGADOR RESPONSABLE</th>
+                <th class="py-3 px-4 border border-gray-300">RESUMEN DEL PLANTEAMIENTO</th>
+                <th class="py-3 px-4 border border-gray-300">FECHA DE RECEPCIÓN</th>
+                <th class="py-3 px-4 border border-gray-300">ESTATUS</th>
+                <th class="py-3 px-4 border border-gray-300">Capturista</th>
+            </tr>
+            <tr class="bg-white text-gray-600 text-sm leading-normal">
+                <th class="py-3 px-4 border border-gray-300"></th>
+                <th class="py-3 px-4 border border-gray-300"></th>
+                <th class="py-3 px-4 border border-gray-300"></th>
+                <th class="py-3 px-4 border border-gray-300"></th>
+                <th class="py-3 px-4 border border-gray-300"></th>
+                <th class="py-3 px-4 border border-gray-300"></th>
+                <th class="py-3 px-4 border border-gray-300"></th>
+                <th class="py-3 px-4 border border-gray-300"></th>
+                <th class="py-3 px-4 border border-gray-300"></th>
+                <th class="py-3 px-4 border border-gray-300"></th>
+                <th class="py-3 px-4 border border-gray-300"></th>
+                <th class="py-3 px-4 border border-gray-300"></th>
+            </tr>
+        </thead>
+        <tbody class="text-gray-600 text-sm font-light">
+            <tr class="border-b border-gray-300 hover:bg-gray-100">
+                <td class="py-3 px-4 border border-gray-300">1</td>
+                <td class="py-3 px-4 border border-gray-300"><input type="checkbox" onclick="openPopup()"></td>
+                <td class="py-3 px-4 border border-gray-300"><i class="fas fa-calendar-check text-green-500"></i> Verde</td>
+                <td class="py-3 px-4 border border-gray-300"><i class="fas fa-eye"></i></td>
+                <td class="py-3 px-4 border border-gray-300"><i class="fas fa-trash-alt text-red-500"></i></td>
+                <td class="py-3 px-4 border border-gray-300"><i class="fas fa-reply"></i></td>
+                <td class="py-3 px-4 border border-gray-300">1823</td>
+                <td class="py-3 px-4 border border-gray-300">ROSALBA OROZCO AGUILERA (OIC-SECRETARÍA DE GOBIERNO)</td>
+                <td class="py-3 px-4 border border-gray-300">NO TIENE MODO DE PONERSE EN CONTACTO CON LAS OFICINAS DEL REGISTRO CIVIL NI CUENTAN CON OTRO MEDIO DE COMUNICACIÓN</td>
+                <td class="py-3 px-4 border border-gray-300">11/10/2024</td>
+                <td class="py-3 px-4 border border-gray-300">TRÁMITE</td>
+                <td class="py-3 px-4 border border-gray-300">Sandra Jessica Rangel Cuellar</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+    <!-- Popup Modal -->
+    <div id="popup-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
+        <div class="bg-white rounded-lg p-6 w-2/3 max-w-4xl flex flex-col">
+            <h2 class="text-2xl font-bold mb-4 text-white bg-blue-500 px-4 py-2 rounded">Nuevo Proceso</h2>
+            <div class="mb-4">
+                <div class="flex space-x-4">
+                    <button class="tab-link text-gray-500" onclick="openTab('reporte')">Reporte</button>
+                    <button class="tab-link text-gray-500" onclick="openTab('denunciante')">Denunciante</button>
+                    <button class="tab-link text-gray-500" onclick="openTab('implicado')">implicado</button>
+                    <button class="tab-link text-gray-500" onclick="openTab('autoridad')">Datos de la autoridad investigadora</button>
+                    <button class="tab-link text-gray-500" onclick="openTab('seguimiento')">Datos del seguimiento</button>
+                    <button class="tab-link text-gray-500" onclick="openTab('tramitacion')">Tramitación</button>
+                    <button class="tab-link text-gray-500" onclick="openTab('cierre')">Datos del cierre</button>
+                </div>
+            </div>
+            <div class="overflow-y-auto max-h-96">
+                <div id="reporte" class="tab-content">
+                    <p>Fecha recepcion</p>
+                    <input type="date" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Fecha de recepción (IPRA)">
+                    <p>Conducta del reporte</p>
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4">
+                        <option value="">Seleccione</option>
+                        <option value="abandono_laborales">Abandono de labores</option>
+                        <option value="abuso_autoridad">Abuso de autoridad</option>
+                        <option value="abuso_sexual">Abuso sexual</option>
+                        <option value="accidente_red_frio">Accidente de red de frío</option>
+                        <option value="acoso_laboral">Acoso laboral</option>
+                        <option value="acoso_sexual">Acoso Sexual</option>
+                        <option value="actos_deshonestos">Actos Deshonestos</option>
+                        <option value="afectacion_derechos_laborales">Afectación de Derechos Laborales</option>
+                        <option value="agresion_alumnos">Agresión entre Alumnos</option>
+                        <option value="amenazas">Amenazas</option>
+                        <option value="cohecho">Cohecho</option>
+                        <option value="conflicto_intereses">Conflicto de Intereses</option>
+                        <option value="corrupcion">Corrupción</option>
+                        <option value="covid">COVID</option>
+                        <option value="cuestiones_electorales">Cuestiones electorales</option>
+                        <option value="deficiencia_servicio">Deficiencia en el Servicio</option>
+                        <option value="deficiente_atencion_medica">Deficiente Atención Médica</option>
+                        <option value="desvio_recursos">Desvío de Recursos</option>
+                        <option value="discriminacion">Discriminación</option>
+                        <option value="doble_plaza">Doble Plaza</option>
+                        <option value="ejercicio_indebido_cargo">Ejercicio Indebido del Cargo</option>
+                        <option value="entrega_recepcion">Entrega-Recepción</option>
+                        <option value="extravio_bienes">Extravio de Bienes</option>
+                        <option value="extravio_documentacion">Extravio de Documentación</option>
+                        <option value="falta_diligencia">Falta de Diligencia</option>
+                        <option value="falta_probidad">Falta de Probidad</option>
+                        <option value="falta_respeto">Falta de Respeto</option>
+                        <option value="faltas">Faltas</option>
+                        <option value="fines">Fines</option>
+                        <option value="hostigamiento">Hostigamiento</option>
+                        <option value="inconformidad_servicio_civil">Inconformidad con el Servicio Civil de Carrera</option>
+                        <option value="incumplimiento_contrato">Incumplimiento de Contrato</option>
+                        <option value="irregularidades_auditorias">Irregularidades derivadas de Auditorías</option>
+                        <option value="maltrato">Maltrato</option>
+                        <option value="mobbing">Mobbing</option>
+                        <option value="nepotismo">Nepotismo</option>
+                        <option value="notoriamente_improcedente">Notoriamente improcedente</option>
+                        <option value="obra_deficiente">Obra Deficiente</option>
+                        <option value="omision">Omisión</option>
+                        <option value="otro">Otro</option>
+                        <option value="peculado">Peculado</option>
+                        <option value="resguardo_inadecuado_bienes">Resguardo Inadecuado de Bienes</option>
+                        <option value="resguardo_inadecuado_documentos">Resguardo Inadecuado de Documentos Oficiales</option>
+                        <option value="responsabilidad_patrimonial">Responsabilidad Patrimonial</option>
+                        <option value="solicitud_indebida_dinero">Solicitud Indebida de Dinero</option>
+                        <option value="solicitud_indebida_recursos">Solicitud Indebida de Recursos</option>
+                        <option value="trafico_influencias">Tráfico de Influencias</option>
+                        <option value="uso_indebido_recursos">Uso Indebido de Recursos</option>
+                        <option value="violencia_genero">Violencia de Género</option>
+                        <option value="violencia_lenguaje_sexual_alumna">Violencia Lenguaje sexual alumna</option>
+                    </select>
+                    <p>Planteamiento</p>
+                    <textarea class="border border-gray-300 rounded p-2 w-full mb-4" placeholder=""></textarea>
+                    <p>Gravedad</p>
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4">
+                        <option value="">Seleccione</option>
+                        <option value="grave">Grave</option>
+                        <option value="no_grave">No grave</option>
+                    </select>
+                    <p>Consecutivo</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Consecutivo ">
+                    <p>Usuario que captura</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Abogado responsable">
+                </div>
+                <div id="denunciante" class="tab-content hidden">
+                    <p>Titulo</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Título del denunciante">
+                    <p>Nombre(s)</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Nombre(s)">
+                    <p>Apellido(s)</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Apellidodos del denunciante">
+
+                    <div class="mb-4">
+                        <span class="block mb-2">Género:</span>
+                        <label><input type="radio" name="genero" value="masculino"> Masculino</label>
+                        <label><input type="radio" name="genero" value="femenino"> Femenino</label>
+                        <label><input type="radio" name="genero" value="otro"> Otro</label>
+                    </div>
+                    <p>Identificacion</p>
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4" onchange="toggleInput('tipo-identificacion-otro', this)">
+                        <option value="">Seleccione</option>
+                        <option value="ine">INE</option>
+                        <option value="cartilla">Cartilla</option>
+                        <option value="licencia">Licencia de conducir</option>
+                        <option value="pasaporte">Pasaporte</option>
+                        <option value="gafete">Gafete oficial</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                    <input type="text" id="tipo-identificacion-otro" class="border border-gray-300 rounded p- 2 w-full mb-4 hidden" placeholder="Especifique otro tipo de identificación">
+                    <p>No. de identificacion</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="No. de identificación">
+                    <p>Telefono</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Teléfono">
+                    <p>Domicilio</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Domicilio">
+                    <p>Correo electronico</p>
+                    <input type="email" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Correo electrónico" required>
+                    <p>Ambito</p>
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4" onchange="toggleInput('ambito-otro', this)">
+                        <option value="">Seleccione</option>
+                        <option value="propio">Propio quejoso</option>
+                        <option value="unidad_interna">Unidad interna</option>
+                        <option value="instancia_federal">Instancia federal</option>
+                        <option value="municipio">Municipio</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                    <input type="text" id="ambito-otro" class="border border-gray-300 rounded p-2 w-full mb-4 hidden" placeholder="Especifique otro ámbito">
+                    <p>Estado</p>
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4" onchange="toggleForaneoInput(this)">
+                        <option value="">Seleccione</option>
+                        <option value="guanajuato">Guanajuato</option>
+                        <option value="queretaro">Querétaro</option>
+                        <option value="foraneo">Foráneo</option>
+                    </select>
+                    <input type="text" id="foraneo-input" class="border border-gray-300 rounded p-2 w-full mb-4 hidden" placeholder="Especifique el estado">
+                    <p>Municipio</p>
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4">
+                        <option value="">Seleccione</option>
+                        <option value="abasolo">Abasolo</option>
+                        <option value="acámbaro">Acámbaro</option>
+                        <option value="apaseo_alto">Apaseo el Alto</option>
+                        <option value="apaseo_grande">Apaseo el Grande</option>
+                        <option value="atarjea">Atarjea</option>
+                        <option value="celaya">Celaya</option>
+                        <option value="comonfort">Comonfort</option>
+                        <option value="coroneo">Coroneo</option>
+                        <option value="cortazar">Cortazar</option>
+                        <option value="cuerámaro">Cuerámaro</option>
+                        <option value="doctor_mora">Doctor Mora</option>
+                        <option value="dolores_hidalgo">Dolores Hidalgo</option>
+                        <option value="guanajuato">Guanajuato</option>
+                        <option value="huanímaro">Huanímaro</option>
+                        <option value="irapuato">Irapuato</option>
+                        <option value="jaral_del_progreso">Jaral del Progreso</option>
+                        <option value="jerécuaro">Jerécuaro</option>
+                        <option value="león">León</option>
+                        <option value="silao">Silao</option>
+                        <option value="valle_de_santiago">Valle de Santiago</option>
+                        <option value="san_miguel_de_allende">San Miguel de Allende</option>
+                        <option value="victoria">Victoria</option>
+                        <option value="manuel_doblado">Manuel Doblado</option>
+                        <option value="moroleón">Moroleón</option>
+                        <option value="ocampo">Ocampo</option>
+                        <option value="pénjamo">Pénjamo</option>
+                        <option value="pueblo_nuevo">Pueblo Nuevo</option>
+                        <option value="purísima_del_rincón">Purísima del Rincón</option>
+                        <option value="querétaro">Querétaro</option>
+                        <option value="romita">Romita</option>
+                        <option value="salamanca">Salamanca</option>
+                        <option value="salvatierra">Salvatierra</option>
+                        <option value="san_diego_de_la_unión">San Diego de la Unión</ <option value="san_felipe">San Felipe</option>
+                        <option value="san_francisco_del_rincón">San Francisco del Rincón</option>
+                        <option value="san_josé_iturbide">San José Iturbide</option>
+                        <option value="san_luis_de_la_paz">San Luis de la Paz</option>
+                        <option value="santa_catarina">Santa Catarina</option>
+                        <option value="santa_cruz_de_juventino_rosas">Santa Cruz de Juventino Rosas</option>
+                        <option value="santiago_maravatío">Santiago Maravatío</option>
+                        <option value="tarandacuao">Tarandacuao</option>
+                        <option value="tarimoro">Tarimoro</option>
+                        <option value="tierra_blanca">Tierra Blanca</option>
+                        <option value="uriangato">Uriangato</option>
+                        <option value="valle_de_santiago">Valle de Santiago</option>
+                        <option value="villagrán">Villagrán</option>
+                        <option value="xichú">Xichú</option>
+                        <option value="yuriria">Yuriria</option>
+                        <option value="foraneo">Foráneo</option>
+                    </select>
+                    <p>Dependencia</p>
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4">
+                        <option value="">Seleccione</option>
+                        <option value="centro_conciliacion">Centro de Conciliación Laboral del Estado de Guanajuato</option>
+                        <option value="centro_evaluacion">Centro de Evaluación y Control de Confianza del Estado de Guanajuato</option>
+                        <option value="colegio_estudios">Colegio de Estudios Científicos y Tecnológicos del Estado de Guanajuato</option>
+                        <option value="colegio_nacional">Colegio Nacional de Educación Profesional y Técnica</option>
+                        <option value="comision_vivienda">Comisión de Vivienda del Estado de Guanajuato</option>
+                        <option value="comision_deporte">Comisión del Deporte del Estado de Guanajuato</option>
+                        <option value="comision_victimas">Comisión Estatal de Atención Integral a Víctimas</option>
+                        <option value="comision_conciliacion">Comisión Estatal de Conciliación y Arbitraje Médico</option>
+                        <option value="comision_agua">Comisión Estatal del Agua de Guanajuato</option>
+                        <option value="consejeria_juridica">Consejería Jurídica del Ejecutivo</option>
+                        <option value="consejeria_enlace">Consejería y Enlace de Gubernatura</option>
+                        <option value="consejo_ciencia">Consejo de Ciencia y Tecnología del Estado de Guanajuato</option>
+                        <option value="coordinacion_comunicacion">Coordinación General de Comunicación Social</option>
+                        <option value="coordinacion_juridica">Coordinación General Jurídica</option>
+                        <option value="coordinadora_fomento">Coordinadora de Fomento al Comercio Exterior</option>
+                        <option value="direccion_auditoria">Dirección General de Auditoría Gubernamental</option>
+                        <option value="escuela_preparatoria">Escuela Preparatoria Regional del Rincón</option>
+                        <option value="federacion">Federación</option>
+                        <option value="fideicomiso">Fideicomiso</option>
+                        <option value="fiscalia_general">Fiscalía General del Estado de Guanajuato</option>
+                        <option value="fondos_guanajuato">Fondos Guanajuato de Financiamiento</option>
+                        <option value="forum_cultural">Forum Cultural Guanajuato</option>
+                        <option value="guanajuato_puerto">Guanajuato Puerto Interior</option>
+                        <option value="instituto_acceso">Instituto de Acceso a la Información</option>
+                        <option value="instituto_alfabetizacion">Instituto de Alfabetización y Educación Básica para Adultos</option>
+                        <option value="instituto_ecologia">Instituto de Ecología del Estado de Guanajuato</option>
+                        <option value="instituto_financiamiento">Instituto de Financiamiento e Información para la Educación</option>
+                        <option value="instituto_formacion">Instituto de Formación en Seguridad Pública del Estado</option>
+                        <option value="instituto_infraestructura">Instituto de Infraestructura Física Educativa de Guanajuato</option>
+                        <option value="instituto_innovacion"> Instituto de Innovación, Ciencia y Emprendimiento para la Competitividad del Estado</option>
+                        <option value="instituto_juventud">Instituto de la Juventud Guanajuatense</option>
+                        <option value="instituto_planeacion">Instituto de Planeación, Estadística y Geografía del Estado de Guanajuato</option>
+                        <option value="instituto_seguridad">Instituto de Seguridad Social del Estado de Guanajuato</option>
+                        <option value="instituto_migrante">Instituto Estatal de Atención al Migrante Guanajuatense y sus Familias</option>
+                        <option value="instituto_capacitacion">Instituto Estatal de Capacitación</option>
+                        <option value="instituto_cultura">Instituto Estatal de la Cultura</option>
+                        <option value="instituto_discapacidad">Instituto Guanajuatense para las Personas con Discapacidad</option>
+                        <option value="instituto_juventudes">Instituto para el Desarrollo y Atención a las Juventudes del Estado de Guanajuato</option>
+                        <option value="instituto_mujeres">Instituto para las Mujeres Guanajuatenses</option>
+                        <option value="tecnologico_abasolo">Instituto Tecnológico Superior de Abasolo</option>
+                        <option value="tecnologico_gto">Instituto Tecnológico Superior de Guanajuato</option>
+                        <option value="tecnologico_irapuato">Instituto Tecnológico Superior de Irapuato</option>
+                        <option value="tecnologico_purisima">Instituto Tecnológico Superior de Purísima del Rincón</option>
+                        <option value="tecnologico_salvatierra">Instituto Tecnológico Superior de Salvatierra</option>
+                        <option value="tecnologico_sur">Instituto Tecnológico Superior del Sur de Guanajuato</option>
+                        <option value="jefatura_gabinete">Jefatura de Gabinete del Poder Ejecutivo</option>
+                        <option value="municipio">Municipio</option>
+                        <option value="museo_iconografico">Museo Iconográfico del Quijote</option>
+                        <option value="parque_agro">Parque Agro Tecnológico Xonotli, S.A. de C.V.</option>
+                        <option value="parque_bicentenario">Parque Guanajuato Bicentenario</option>
+                        <option value="particular">Particular</option>
+                        <option value="procuraduria_ambiental">Procuraduría Ambiental y de Ordenamiento Territorial del Estado de Guanajuato</option>
+                        <option value="procuraduria_ninas">Procuraduría Estatal de Protección de Niñas, Niños y Adolescentes del Estado de Guanajuato</option>
+                        <option value="procuraduria_general">Procuraduría General de Justicia del Estado</option>
+                        <option value="representacion_gobierno">Representación del Gobierno de Guanajuato en la Ciudad de México</option>
+                        <option value="secretaria_cultura">Secretaría de Cultura</option>
+                        <option value="secretaria_derechos">Secretaría de Derechos Humanos</option>
+                        <option value="secretaria_desarrollo_agro">Secretaría de Desarrollo Agroalimentario y Rural</option>
+                        <option value="secretaria_desarrollo_economico">Secretaría de Desarrollo Económico Sustentable</option>
+                        <option value="secretaria_desarrollo_social">Secretaría de Desarrollo Social y Humano</option>
+                        <option value="secretaria_economia">Secretaría de Economía</option>
+                        <option value="secretaria_educacion">Secretaría de Educación de Guanajuato</option>
+                        <option value="secretaria_finanzas">Secretaría de Finanzas</option>
+                        <option value="secretaria_funcion_publica">Secretaría de la Función Pública</option>
+                        <option value="secretaria_transparencia">Secretaría de la Transparencia y Rendición de Cuentas</option>
+                        <option value="secretaria_medio_ambiente">Secretaría de Medio Ambiente y Ordenamiento Territorial</option>
+                        <option value="secretaria_obra">Secretaría de Obra Pública</option>
+                        <option value="secretaria_salud">Secretaría de Salud de Guanajuato</option>
+                        <option value="secretaria_seguridad">Secretaría de Seguridad Pública</option>
+                        <option value="secretaria_turismo">Secretaría de Turismo</option>
+                        <option value="universidad_virtual">Universidad Virtual del Estado de Guanajuato</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                    <input type="text" id ="dependencia-otro" class="border border-gray-300 rounded p-2 w-full mb-4 hidden" placeholder="Especifique otra dependencia">
+                    <p>Cargo</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Escriba el cargo del denunciante">
+                    <p>Area de adscripcion del denunciante</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Escriba el área de adscripción del denunciante">
+                    <div class="mb-4">
+                        <span class="block mb-2">¿Autoriza la cesión de sus datos personales?</span>
+                        <label><input type="radio" name="cesion_datos" value="si"> Sí</label>
+                        <label><input type="radio" name="cesion_datos" value="no"> No</label>
+                    </div>
+                    <div class="mb-4">
+                        <span class="block mb-2">¿Solicita que sus datos se manejen de manera anónima?</span>
+                        <label><input type="radio" name="anonimo" value="si"> Sí</label>
+                        <label><input type="radio" name="anonimo" value="no"> No</label>
+                    </div>
+                </div>
+                <div id="implicado" class="tab-content hidden">
+                    <p>Nombre(s) del servidor público</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Nombre del servidor publico">
+                    <p>Apellidos(s) del servidor público</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Apellidos del servidor publico">
+                    <div class="mb-4">
+                        <span class="block mb-2">Género:</span>
+                        <label><input type="radio" name="genero" value="masculino"> Masculino</label>
+                        <label><input type="radio" name="genero" value="femenino"> Femenino</label>
+                        <label><input type="radio" name="genero" value="otro"> Otro</label>
+                    </div>
+                    <p>Estado</p>
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4" onchange="toggleForaneoInput(this)">
+                        <option value="">Seleccione</option>
+                        <option value="guanajuato">Guanajuato</option>
+                        <option value="queretaro">Querétaro</option>
+                        <option value="foraneo">Foráneo</option>
+                    </select>
+                    <input type="text" id="foraneo-input" class="border border-gray-300 rounded p-2 w-full mb-4 hidden" placeholder="Especifique el estado">
+                    <p>Municipio</p>
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4">
+                        <option value="">Seleccione</option>
+                        <option value="abasolo">Abasolo</option>
+                        <option value="acámbaro">Acámbaro</option>
+                        <option value="apaseo_alto">Apaseo el Alto</option>
+                        <option value="apaseo_grande">Apaseo el Grande</option>
+                        <option value="atarjea">Atarjea</option>
+                        <option value="celaya">Celaya</option>
+                        <option value="comonfort">Comonfort</option>
+                        <option value="coroneo">Coroneo</option>
+                        <option value="cortazar">Cortazar</option>
+                        <option value="cuerámaro">Cuerámaro</option>
+                        <option value="doctor_mora">Doctor Mora</option>
+                        <option value="dolores_hidalgo">Dolores Hidalgo</option>
+                        <option value="guanajuato">Guanajuato</option>
+                        <option value="huanímaro">Huanímaro</option>
+                        <option value="irapuato">Irapuato</option>
+                        <option value="jaral_del_progreso">Jaral del Progreso</option>
+                        <option value="jerécuaro">Jerécuaro</option>
+                        <option value="león">León</option>
+                        <option value="silao">Silao</option>
+                        <option value="valle_de_santiago">Valle de Santiago</option>
+                        <option value="san_miguel_de_allende">San Miguel de Allende</option>
+                        <option value="victoria">Victoria</option>
+                        <option value="manuel_doblado">Manuel Doblado</option>
+                        <option value="moroleón">Moroleón</option>
+                        <option value="ocampo">Ocampo</option>
+                        <option value="pénjamo">Pénjamo</option>
+                        <option value="pueblo_nuevo">Pueblo Nuevo</option>
+                        <option value="purísima_del_rincón">Purísima del Rincón</option>
+                        <option value="querétaro">Querétaro</option>
+                        <option value="romita">Romita</option>
+                        <option value="salamanca">Salamanca</option>
+                        <option value="salvatierra">Salvatierra</option>
+                        <option value="san_diego_de_la_unión">San Diego de la Unión</ <option value="san_felipe">San Felipe</option>
+                        <option value="san_francisco_del_rincón">San Francisco del Rincón</option>
+                        <option value="san_josé_iturbide">San José Iturbide</option>
+                        <option value="san_luis_de_la_paz">San Luis de la Paz</option>
+                        <option value="santa_catarina">Santa Catarina</option>
+                        <option value="santa_cruz_de_juventino_rosas">Santa Cruz de Juventino Rosas</option>
+                        <option value="santiago_maravatío">Santiago Maravatío</option>
+                        <option value="tarandacuao">Tarandacuao</option>
+                        <option value="tarimoro">Tarimoro</option>
+                        <option value="tierra_blanca">Tierra Blanca</option>
+                        <option value="uriangato">Uriangato</option>
+                        <option value="valle_de_santiago">Valle de Santiago</option>
+                        <option value="villagrán">Villagrán</option>
+                        <option value="xichú">Xichú</option>
+                        <option value="yuriria">Yuriria</option>
+                        <option value="foraneo">Foráneo</option>
+                    </select>
+                    <p>Caracter</p>
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4" onchange="toggleForaneoInput(this)">
+                        <option value="">Seleccione</option>
+                        <option value="guanajuato">Administracion publica municipal</option>
+                        <option value="queretaro">Administracion publica estatal</option>
+                        <option value="foraneo">Administracion publica federal</option>
+                        <option value="foraneo">Persona Fisica</option>
+                        <option value="foraneo">Persona moral</option>
+                        <option value="foraneo">Servidor publico</option>
+                        <option value="foraneo">Particular </option>
+                        <option value="foraneo">Unidad interna</option>
+                        <option value="foraneo">Otra instancia estatal</option>
+                        <option value="foraneo">Otro</option>
+                        <option value="foraneo">Municipio</option>
+                        <option value="foraneo">OIC</option>
+                    </select>
+                    <p>Dependencia donde labora el servidor publico</p>
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4">
+                        <option value="">Seleccione</option>
+                        <option value="centro_conciliacion">Centro de Conciliación Laboral del Estado de Guanajuato</option>
+                        <option value="centro_evaluacion">Centro de Evaluación y Control de Confianza del Estado de Guanajuato</option>
+                        <option value="colegio_estudios">Colegio de Estudios Científicos y Tecnológicos del Estado de Guanajuato</option>
+                        <option value="colegio_nacional">Colegio Nacional de Educación Profesional y Técnica</option>
+                        <option value="comision_vivienda">Comisión de Vivienda del Estado de Guanajuato</option>
+                        <option value="comision_deporte">Comisión del Deporte del Estado de Guanajuato</option>
+                        <option value="comision_victimas">Comisión Estatal de Atención Integral a Víctimas</option>
+                        <option value="comision_conciliacion">Comisión Estatal de Conciliación y Arbitraje Médico</option>
+                        <option value="comision_agua">Comisión Estatal del Agua de Guanajuato</option>
+                        <option value="consejeria_juridica">Consejería Jurídica del Ejecutivo</option>
+                        <option value="consejeria_enlace">Consejería y Enlace de Gubernatura</option>
+                        <option value="consejo_ciencia">Consejo de Ciencia y Tecnología del Estado de Guanajuato</option>
+                        <option value="coordinacion_comunicacion">Coordinación General de Comunicación Social</option>
+                        <option value="coordinacion_juridica">Coordinación General Jurídica</option>
+                        <option value="coordinadora_fomento">Coordinadora de Fomento al Comercio Exterior</option>
+                        <option value="direccion_auditoria">Dirección General de Auditoría Gubernamental</option>
+                        <option value="escuela_preparatoria">Escuela Preparatoria Regional del Rincón</option>
+                        <option value="federacion">Federación</option>
+                        <option value="fideicomiso">Fideicomiso</option>
+                        <option value="fiscalia_general">Fiscalía General del Estado de Guanajuato</option>
+                        <option value="fondos_guanajuato">Fondos Guanajuato de Financiamiento</option>
+                        <option value="forum_cultural">Forum Cultural Guanajuato</option>
+                        <option value="guanajuato_puerto">Guanajuato Puerto Interior</option>
+                        <option value="instituto_acceso">Instituto de Acceso a la Información</option>
+                        <option value="instituto_alfabetizacion">Instituto de Alfabetización y Educación Básica para Adultos</option>
+                        <option value="instituto_ecologia">Instituto de Ecología del Estado de Guanajuato</option>
+                        <option value="instituto_financiamiento">Instituto de Financiamiento e Información para la Educación</option>
+                        <option value="instituto_formacion">Instituto de Formación en Seguridad Pública del Estado</option>
+                        <option value="instituto_infraestructura">Instituto de Infraestructura Física Educativa de Guanajuato</option>
+                        <option value="instituto_innovacion"> Instituto de Innovación, Ciencia y Emprendimiento para la Competitividad del Estado</option>
+                        <option value="instituto_juventud">Instituto de la Juventud Guanajuatense</option>
+                        <option value="instituto_planeacion">Instituto de Planeación, Estadística y Geografía del Estado de Guanajuato</option>
+                        <option value="instituto_seguridad">Instituto de Seguridad Social del Estado de Guanajuato</option>
+                        <option value="instituto_migrante">Instituto Estatal de Atención al Migrante Guanajuatense y sus Familias</option>
+                        <option value="instituto_capacitacion">Instituto Estatal de Capacitación</option>
+                        <option value="instituto_cultura">Instituto Estatal de la Cultura</option>
+                        <option value="instituto_discapacidad">Instituto Guanajuatense para las Personas con Discapacidad</option>
+                        <option value="instituto_juventudes">Instituto para el Desarrollo y Atención a las Juventudes del Estado de Guanajuato</option>
+                        <option value="instituto_mujeres">Instituto para las Mujeres Guanajuatenses</option>
+                        <option value="tecnologico_abasolo">Instituto Tecnológico Superior de Abasolo</option>
+                        <option value="tecnologico_gto">Instituto Tecnológico Superior de Guanajuato</option>
+                        <option value="tecnologico_irapuato">Instituto Tecnológico Superior de Irapuato</option>
+                        <option value="tecnologico_purisima">Instituto Tecnológico Superior de Purísima del Rincón</option>
+                        <option value="tecnologico_salvatierra">Instituto Tecnológico Superior de Salvatierra</option>
+                        <option value="tecnologico_sur">Instituto Tecnológico Superior del Sur de Guanajuato</option>
+                        <option value="jefatura_gabinete">Jefatura de Gabinete del Poder Ejecutivo</option>
+                        <option value="municipio">Municipio</option>
+                        <option value="museo_iconografico">Museo Iconográfico del Quijote</option>
+                        <option value="parque_agro">Parque Agro Tecnológico Xonotli, S.A. de C.V.</option>
+                        <option value="parque_bicentenario">Parque Guanajuato Bicentenario</option>
+                        <option value="particular">Particular</option>
+                        <option value="procuraduria_ambiental">Procuraduría Ambiental y de Ordenamiento Territorial del Estado de Guanajuato</option>
+                        <option value="procuraduria_ninas">Procuraduría Estatal de Protección de Niñas, Niños y Adolescentes del Estado de Guanajuato</option>
+                        <option value="procuraduria_general">Procuraduría General de Justicia del Estado</option>
+                        <option value="representacion_gobierno">Representación del Gobierno de Guanajuato en la Ciudad de México</option>
+                        <option value="secretaria_cultura">Secretaría de Cultura</option>
+                        <option value="secretaria_derechos">Secretaría de Derechos Humanos</option>
+                        <option value="secretaria_desarrollo_agro">Secretaría de Desarrollo Agroalimentario y Rural</option>
+                        <option value="secretaria_desarrollo_economico">Secretaría de Desarrollo Económico Sustentable</option>
+                        <option value="secretaria_desarrollo_social">Secretaría de Desarrollo Social y Humano</option>
+                        <option value="secretaria_economia">Secretaría de Economía</option>
+                        <option value="secretaria_educacion">Secretaría de Educación de Guanajuato</option>
+                        <option value="secretaria_finanzas">Secretaría de Finanzas</option>
+                        <option value="secretaria_funcion_publica">Secretaría de la Función Pública</option>
+                        <option value="secretaria_transparencia">Secretaría de la Transparencia y Rendición de Cuentas</option>
+                        <option value="secretaria_medio_ambiente">Secretaría de Medio Ambiente y Ordenamiento Territorial</option>
+                        <option value="secretaria_obra">Secretaría de Obra Pública</option>
+                        <option value="secretaria_salud">Secretaría de Salud de Guanajuato</option>
+                        <option value="secretaria_seguridad">Secretaría de Seguridad Pública</option>
+                        <option value="secretaria_turismo">Secretaría de Turismo</option>
+                        <option value="universidad_virtual">Universidad Virtual del Estado de Guanajuato</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                    <input type="text" id ="dependencia-otro" class="border border-gray-300 rounded p-2 w-full mb-4 hidden" placeholder="Especifique otra dependencia">
+                    <p>Cargo</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Escriba el cargo del denunciante">
+                    <p>Area de adscripcion</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Escriba el área de adscripción del denunciante">
+                    <p>Domicilio o lugar de trabajo del servidor publico</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Escriba el domicilio o lugar de trabajo del servidor publico">
+
+                </div>
+                <div id="autoridad" class="tab-content hidden">
+                    <p>Nombre(s)</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Nombre del remitente">
+                    <p>Apellidos</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Apellidos del remitente">
+                    <p>Cargo</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Escriba el cargo del denunciante">
+
+                    <p>Dependencia </p>
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4">
+                        <option value="">Seleccione</option>
+                        <option value="centro_conciliacion">Centro de Conciliación Laboral del Estado de Guanajuato</option>
+                        <option value="centro_evaluacion">Centro de Evaluación y Control de Confianza del Estado de Guanajuato</option>
+                        <option value="colegio_estudios">Colegio de Estudios Científicos y Tecnológicos del Estado de Guanajuato</option>
+                        <option value="colegio_nacional">Colegio Nacional de Educación Profesional y Técnica</option>
+                        <option value="comision_vivienda">Comisión de Vivienda del Estado de Guanajuato</option>
+                        <option value="comision_deporte">Comisión del Deporte del Estado de Guanajuato</option>
+                        <option value="comision_victimas">Comisión Estatal de Atención Integral a Víctimas</option>
+                        <option value="comision_conciliacion">Comisión Estatal de Conciliación y Arbitraje Médico</option>
+                        <option value="comision_agua">Comisión Estatal del Agua de Guanajuato</option>
+                        <option value="consejeria_juridica">Consejería Jurídica del Ejecutivo</option>
+                        <option value="consejeria_enlace">Consejería y Enlace de Gubernatura</option>
+                        <option value="consejo_ciencia">Consejo de Ciencia y Tecnología del Estado de Guanajuato</option>
+                        <option value="coordinacion_comunicacion">Coordinación General de Comunicación Social</option>
+                        <option value="coordinacion_juridica">Coordinación General Jurídica</option>
+                        <option value="coordinadora_fomento">Coordinadora de Fomento al Comercio Exterior</option>
+                        <option value="direccion_auditoria">Dirección General de Auditoría Gubernamental</option>
+                        <option value="escuela_preparatoria">Escuela Preparatoria Regional del Rincón</option>
+                        <option value="federacion">Federación</option>
+                        <option value="fideicomiso">Fideicomiso</option>
+                        <option value="fiscalia_general">Fiscalía General del Estado de Guanajuato</option>
+                        <option value="fondos_guanajuato">Fondos Guanajuato de Financiamiento</option>
+                        <option value="forum_cultural">Forum Cultural Guanajuato</option>
+                        <option value="guanajuato_puerto">Guanajuato Puerto Interior</option>
+                        <option value="instituto_acceso">Instituto de Acceso a la Información</option>
+                        <option value="instituto_alfabetizacion">Instituto de Alfabetización y Educación Básica para Adultos</option>
+                        <option value="instituto_ecologia">Instituto de Ecología del Estado de Guanajuato</option>
+                        <option value="instituto_financiamiento">Instituto de Financiamiento e Información para la Educación</option>
+                        <option value="instituto_formacion">Instituto de Formación en Seguridad Pública del Estado</option>
+                        <option value="instituto_infraestructura">Instituto de Infraestructura Física Educativa de Guanajuato</option>
+                        <option value="instituto_innovacion"> Instituto de Innovación, Ciencia y Emprendimiento para la Competitividad del Estado</option>
+                        <option value="instituto_juventud">Instituto de la Juventud Guanajuatense</option>
+                        <option value="instituto_planeacion">Instituto de Planeación, Estadística y Geografía del Estado de Guanajuato</option>
+                        <option value="instituto_seguridad">Instituto de Seguridad Social del Estado de Guanajuato</option>
+                        <option value="instituto_migrante">Instituto Estatal de Atención al Migrante Guanajuatense y sus Familias</option>
+                        <option value="instituto_capacitacion">Instituto Estatal de Capacitación</option>
+                        <option value="instituto_cultura">Instituto Estatal de la Cultura</option>
+                        <option value="instituto_discapacidad">Instituto Guanajuatense para las Personas con Discapacidad</option>
+                        <option value="instituto_juventudes">Instituto para el Desarrollo y Atención a las Juventudes del Estado de Guanajuato</option>
+                        <option value="instituto_mujeres">Instituto para las Mujeres Guanajuatenses</option>
+                        <option value="tecnologico_abasolo">Instituto Tecnológico Superior de Abasolo</option>
+                        <option value="tecnologico_gto">Instituto Tecnológico Superior de Guanajuato</option>
+                        <option value="tecnologico_irapuato">Instituto Tecnológico Superior de Irapuato</option>
+                        <option value="tecnologico_purisima">Instituto Tecnológico Superior de Purísima del Rincón</option>
+                        <option value="tecnologico_salvatierra">Instituto Tecnológico Superior de Salvatierra</option>
+                        <option value="tecnologico_sur">Instituto Tecnológico Superior del Sur de Guanajuato</option>
+                        <option value="jefatura_gabinete">Jefatura de Gabinete del Poder Ejecutivo</option>
+                        <option value="municipio">Municipio</option>
+                        <option value="museo_iconografico">Museo Iconográfico del Quijote</option>
+                        <option value="parque_agro">Parque Agro Tecnológico Xonotli, S.A. de C.V.</option>
+                        <option value="parque_bicentenario">Parque Guanajuato Bicentenario</option>
+                        <option value="particular">Particular</option>
+                        <option value="procuraduria_ambiental">Procuraduría Ambiental y de Ordenamiento Territorial del Estado de Guanajuato</option>
+                        <option value="procuraduria_ninas">Procuraduría Estatal de Protección de Niñas, Niños y Adolescentes del Estado de Guanajuato</option>
+                        <option value="procuraduria_general">Procuraduría General de Justicia del Estado</option>
+                        <option value="representacion_gobierno">Representación del Gobierno de Guanajuato en la Ciudad de México</option>
+                        <option value="secretaria_cultura">Secretaría de Cultura</option>
+                        <option value="secretaria_derechos">Secretaría de Derechos Humanos</option>
+                        <option value="secretaria_desarrollo_agro">Secretaría de Desarrollo Agroalimentario y Rural</option>
+                        <option value="secretaria_desarrollo_economico">Secretaría de Desarrollo Económico Sustentable</option>
+                        <option value="secretaria_desarrollo_social">Secretaría de Desarrollo Social y Humano</option>
+                        <option value="secretaria_economia">Secretaría de Economía</option>
+                        <option value="secretaria_educacion">Secretaría de Educación de Guanajuato</option>
+                        <option value="secretaria_finanzas">Secretaría de Finanzas</option>
+                        <option value="secretaria_funcion_publica">Secretaría de la Función Pública</option>
+                        <option value="secretaria_transparencia">Secretaría de la Transparencia y Rendición de Cuentas</option>
+                        <option value="secretaria_medio_ambiente">Secretaría de Medio Ambiente y Ordenamiento Territorial</option>
+                        <option value="secretaria_obra">Secretaría de Obra Pública</option>
+                        <option value="secretaria_salud">Secretaría de Salud de Guanajuato</option>
+                        <option value="secretaria_seguridad">Secretaría de Seguridad Pública</option>
+                        <option value="secretaria_turismo">Secretaría de Turismo</option>
+                        <option value="universidad_virtual">Universidad Virtual del Estado de Guanajuato</option>
+                        <option value="otro">Otro</option>
+                    </select>
+
+                    <p>Estado</p>
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4" onchange="toggleForaneoInput(this)">
+                        <option value="">Seleccione</option>
+                        <option value="guanajuato">Guanajuato</option>
+                        <option value="queretaro">Querétaro</option>
+                        <option value="foraneo">Foráneo</option>
+                    </select>
+
+                    <p>Municipio</p>
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4">
+                        <option value="">Seleccione</option>
+                        <option value="abasolo">Abasolo</option>
+                        <option value="acámbaro">Acámbaro</option>
+                        <option value="apaseo_alto">Apaseo el Alto</option>
+                        <option value="apaseo_grande">Apaseo el Grande</option>
+                        <option value="atarjea">Atarjea</option>
+                        <option value="celaya">Celaya</option>
+                        <option value="comonfort">Comonfort</option>
+                        <option value="coroneo">Coroneo</option>
+                        <option value="cortazar">Cortazar</option>
+                        <option value="cuerámaro">Cuerámaro</option>
+                        <option value="doctor_mora">Doctor Mora</option>
+                        <option value="dolores_hidalgo">Dolores Hidalgo</option>
+                        <option value="guanajuato">Guanajuato</option>
+                        <option value="huanímaro">Huanímaro</option>
+                        <option value="irapuato">Irapuato</option>
+                        <option value="jaral_del_progreso">Jaral del Progreso</option>
+                        <option value="jerécuaro">Jerécuaro</option>
+                        <option value="león">León</option>
+                        <option value="silao">Silao</option>
+                        <option value="valle_de_santiago">Valle de Santiago</option>
+                        <option value="san_miguel_de_allende">San Miguel de Allende</option>
+                        <option value="victoria">Victoria</option>
+                        <option value="manuel_doblado">Manuel Doblado</option>
+                        <option value="moroleón">Moroleón</option>
+                        <option value="ocampo">Ocampo</option>
+                        <option value="pénjamo">Pénjamo</option>
+                        <option value="pueblo_nuevo">Pueblo Nuevo</option>
+                        <option value="purísima_del_rincón">Purísima del Rincón</option>
+                        <option value="querétaro">Querétaro</option>
+                        <option value="romita">Romita</option>
+                        <option value="salamanca">Salamanca</option>
+                        <option value="salvatierra">Salvatierra</option>
+                        <option value="san_diego_de_la_unión">San Diego de la Unión</option> 
+                        <option value="san_felipe">San Felipe</option>
+                        <option value="san_francisco_del_rincón">San Francisco del Rincón</option>
+                        <option value="san_josé_iturbide">San José Iturbide</option>
+                        <option value="san_luis_de_la_paz">San Luis de la Paz</option>
+                        <option value="santa_catarina">Santa Catarina</option>
+                        <option value="santa_cruz_de_juventino_rosas">Santa Cruz de Juventino Rosas</option>
+                        <option value="santiago_maravatío">Santiago Maravatío</option>
+                        <option value="tarandacuao">Tarandacuao</option>
+                        <option value="tarimoro">Tarimoro</option>
+                        <option value="tierra_blanca">Tierra Blanca</option>
+                        <option value="uriangato">Uriangato</option>
+                        <option value="valle_de_santiago">Valle de Santiago</option>
+                        <option value="villagrán">Villagrán</option>
+                        <option value="xichú">Xichú</option>
+                        <option value="yuriria">Yuriria</option>
+                        <option value="foraneo">Foráneo</option>
+                    </select>
+
+                    <p>Titulo</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Título del remitente">
+
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4" onchange="toggleInput('ambito-otro', this)">
+                        <option value="">Seleccione</option>
+                        <option value="propio">Administracion publca estatal</option>
+                        <option value="propio">Otra instancia estatal</option>
+                        <option value="propio">Propio quejoso</option>
+                        <option value="unidad_interna">Unidad interna</option>
+                        <option value="instancia_federal">Instancia federal</option>
+                        <option value="municipio">Municipio</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                    <p>Area de adscripcion del remitente</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Escriba el área de adscripción del remitente">
+                    <p>Domicilio</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Domicilio">
+                </div>
+                <div id="seguimiento" class="tab-content hidden">
+                    <p>Fecha de acuerdo de radicacion</p>
+                    <input type="date" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="">
+                    <p>Fecha de audiencia</p>
+                    <input type="date" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="">
+                    <p>Acuerdo de alegatos</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="acuerdo de alegatos">
+                    <p>Fecha de acuerdo de resolucion</p>
+                    <input type="date" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="">
+                    <p>Fecha de notificacion</p>
+                    <input type="date" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="">
+                    <p>Acuerdo de turno al TJA</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Acuerdo de turno de TJA">
+                    <p>Oficio de turno al TJA</p>
+                    <input type="text" class="border border-gray-300 rounded p-2 w-full mb-4" placeholder="Oficio de turno al TJA">
+
+                </div>
+                <div id="tramitacion" class="tab-content hidden">
+                    <h2 class="text-blue-500 font-semibold mb-4">ACTUALIZACIONES</h2>
+                    <div class="mb-4">
+                        <label for="descripcion" class="block text-gray-700 mb-2">Descripción de la actualización</label>
+                        <div class="border rounded-md p-2">
+                            <div class="flex items-center mb-2">
+                                <button class="p-1"><i class="fas fa-bold"></i></button>
+                                <button class="p-1"><i class="fas fa-italic"></i></button>
+                                <button class="p-1"><i class="fas fa-underline"></i></button>
+                                <button class="p-1"><i class="fas fa-strikethrough"></i></button>
+                                <select class="p-1 border rounded-md">
+                                    <option>sans-serif</option>
+                                </select>
+                                <button class="p-1"><i class="fas fa-highlighter"></i></button>
+                                <button class="p-1"><i class="fas fa-list-ul"></i></button>
+                                <button class="p-1"><i class="fas fa-list-ol"></i></button>
+                                <button class="p-1"><i class="fas fa-link"></i></button>
+                                <button class="p-1"><i class="fas fa-image"></i></button>
+                                <button class="p-1"><i class="fas fa-video"></i></button>
+                                <button class="p-1"><i class="fas fa-code"></i></button>
+                                <button class="p-1"><i class="fas fa-question"></i></button>
+                            </div>
+                            <textarea id="descripcion" class="w-full h-32 border rounded-md p-2"></textarea>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="file-upload" class="block text-gray-700 mb-2">Subir documentos (PDF)</label>
+                        <div class="flex items-center">
+                            <input type="file" id="file-upload" accept="application/pdf" multiple class="block w-full text-gray-700 border border-gray-300 rounded-lg p-2" onchange="handleFileUpload(event)">
+                        </div>
+                        <div id="file-names" class="mt-2"></div>
+                    </div>
+                    <div class="flex justify-end">
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded-md">+Agregar</button>
+                    </div>
+                    <div class="mt-6">
+                        <div class="flex justify-between border-b py-2">
+                            <span class="text-gray-700">Actualización</span>
+                            <span class="text-gray-700">Fecha</span>
+                        </div>
+                        <div class="py-4 text-center text-gray-500">
+                            No hay actualizaciones
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="cierre" class="tab-content hidden">
+                    <p>Resultado del cierre del procedimiento:</p>
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4">
+                        <option value="">Seleccione </option>
+                        <option value="no_responsabilidad">No Responsabilidad</option>
+                        <option value="abstencion">Abstención</option>
+                        <option value="no_presentado">No presentado</option>
+                        <option value="sobreseimiento">Sobreseimiento</option>
+                        <option value="archivo">Archivo</option>
+                        <option value="con_responsabilidad">Con responsabilidad</option>
+                    </select>
+                    <p>Tipo de sanción</p>
+                    <select class="border border-gray-300 rounded p-2 w-full mb-4">
+                        <option value="">Seleccione </option>
+                        <option value="suspension">Suspensión</option>
+                        <option value="inhabilitacion">Inhabilitación</option>
+                        <option value="amonestacion_publica">Amonestación pública</option>
+                        <option value="amonestacion_privada">Amonestación privada</option>
+                        <option value="destitucion">Destitución</option>
+                        <option value="sancion_economica">Sanción Económica</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-end mt-4">
+                <button onclick="closePopup()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2">Cancelar</button>
+                <button class="bg-blue-500 text-white px-4 py-2 rounded">Guardar</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
